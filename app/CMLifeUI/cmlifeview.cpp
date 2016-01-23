@@ -4,6 +4,8 @@
 #include <universe.h>
 #include <functional>
 
+#include <QDebug>
+
 using namespace cmlife;
 
 CMLifeView::CMLifeView(QWidget *parent) :
@@ -11,6 +13,8 @@ CMLifeView::CMLifeView(QWidget *parent) :
     ui(new Ui::CMLifeView)
 {
     ui->setupUi(this);
+
+    createUniverse();
 }
 
 CMLifeView::~CMLifeView()
@@ -18,21 +22,8 @@ CMLifeView::~CMLifeView()
     delete ui;
 }
 
-typedef Universe<int> U;
-
 
 void CMLifeView::createUniverse()
 {
-    U u;
-
-    std::function<U(U)> leftGen = [](const U& iu) {
-        return left(iu);
-        };
-
-    std::function<U(U)> rightGen = [](const U& iu) {
-        return right(iu);
-        };
-
-
 
 }

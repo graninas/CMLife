@@ -5,5 +5,6 @@ SUBDIRS += \
     lib/cpp_monads \
     lib/cpp_lenses \
     src/cmlife \
+    src/cmlifeTest \
     app/CMLifeUI
 
