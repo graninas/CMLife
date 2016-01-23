@@ -9,7 +9,10 @@ QMAKE_CXXFLAGS += -std=c++11
 SOURCES +=
 
 HEADERS += \
-    universe.h
+    universe.h \
+    utils.h \
+    life.h \
+    comonad.h
 
 unix {
     target.path = /usr/lib
