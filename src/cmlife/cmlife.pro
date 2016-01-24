@@ -12,7 +12,9 @@ HEADERS += \
     universe.h \
     utils.h \
     life.h \
-    comonad.h
+    comonad.h \
+    and_combinator.h \
+    applicative.h
 
 unix {
     target.path = /usr/lib

@@ -7,6 +7,7 @@
 #include <life.h>
 
 #include <vector>
+#include <string>
 #include <functional>
 
 #include <QDebug>
@@ -22,7 +23,10 @@ public:
 
 private Q_SLOTS:
     void makeUniverseTest();
+    void universeComonadTest();
+
     void fromVector2Test();
+    void getNeighboursTest();
     void stepLifeTest();
 };
 
@@ -48,17 +52,14 @@ std::vector<std::vector<Cell>> glider()
     };
 }
 
+LifeField gliderLife()
+{
+    return fromVector2(glider());
+}
+
 void CMLifeTest::makeUniverseTest()
 {
-    std::function<U(U)> leftGen = [](const U& iu) {
-        return left(iu);
-        };
-
-    std::function<U(U)> rightGen = [](const U& iu) {
-        return right(iu);
-        };
-
-    U2 u = makeUniverse(leftGen, rightGen, testUniverse());
+    U2 u = makeUniverseLR(testUniverse());
 
     QVERIFY(u.size() == 10);
     for (int i = 0; i < u.size(); ++i)
@@ -66,6 +67,27 @@ void CMLifeTest::makeUniverseTest()
         QVERIFY(u.field[i].position == i);
         QVERIFY(u.field[i].size() == 10);
     }
+}
+
+void CMLifeTest::universeComonadTest()
+{
+    U u = testUniverse();
+
+    U u2 = extract(duplicate(u));
+    QVERIFY(u2.field == u.field);
+    QVERIFY(u2.position == u.position);
+
+    const std::function<std::string(Universe<Cell>)> mappingExtractor =
+        [=](const Universe<Cell>& u){
+            return std::to_string(extract(u));
+        };
+
+    std::string extracted = extract(extend(mappingExtractor, u));
+    QVERIFY(extracted == mappingExtractor(u));
+
+    auto extended = extend(extractLife, u);
+    QVERIFY(extended.field == u.field);
+    QVERIFY(extended.position == u.position);
 }
 
 void CMLifeTest::fromVector2Test()
@@ -79,6 +101,13 @@ void CMLifeTest::fromVector2Test()
         QVERIFY(u.field[i].size() == 3);
         QVERIFY(u.field[i].field == glider()[i]);
     }
+}
+
+void CMLifeTest::getNeighboursTest()
+{
+    LifeField l = gliderLife();
+
+    //int ns = getNeighbours()
 }
 
 void CMLifeTest::stepLifeTest()

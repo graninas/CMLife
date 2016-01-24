@@ -3,14 +3,10 @@
 
 #include "universe.h"
 
+// TODO: move it to functional_core
 namespace cmlife {
 
-template <typename T> Universe<Universe<T>> stepWith(
-        const Universe<Universe<T>>& u,
-        const std::function<T(Universe<Universe<T>>)>& rule)
-{
-    return u;
-}
+
 
 } // namespace cmlife
 

@@ -1,9 +1,6 @@
 #ifndef PRESENTATIONSNIPPETS_H
 #define PRESENTATIONSNIPPETS_H
 
-#include "amber.h"
-#include "monads.h"
-#include "shadowmechanics.h"
 
 namespace presentationsnippets
 {
