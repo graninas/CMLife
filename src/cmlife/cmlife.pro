@@ -14,7 +14,8 @@ HEADERS += \
     life.h \
     comonad.h \
     and_combinator.h \
-    applicative.h
+    applicative.h \
+    functor.h
 
 unix {
     target.path = /usr/lib

@@ -1,8 +1,8 @@
 #include <QString>
 #include <QtTest>
 
-#include <universe.h>
 #include <comonad.h>
+#include <universe.h>
 #include <utils.h>
 #include <life.h>
 
@@ -26,7 +26,8 @@ private Q_SLOTS:
     void universeComonadTest();
 
     void fromVector2Test();
-    void getNeighboursTest();
+    void getNeighbours8_1Test();
+    void getNeighbours8_2Test();
     void stepLifeTest();
 };
 
@@ -49,6 +50,21 @@ std::vector<std::vector<Cell>> glider()
         {0, 1, 1},
         {1, 0, 0},
         {0, 1, 0}
+    };
+}
+
+std::vector<std::vector<Cell>> gliderShifted()
+{
+    return {
+        {0,1,0, 0, 0, 0, 0,0,0},
+        {0,0,0, 0, 0, 0, 0,1,1},
+        {0,0,0, 0, 0, 0, 0,0,0},
+        {0,0,0, 0, 1, 1, 0,0,0},
+        {0,0,0, 1, 0, 0, 0,0,0},
+        {0,0,0, 0, 1, 0, 0,0,0},
+        {0,0,0, 0, 0, 0, 0,0,0},
+        {0,0,0, 0, 0, 0, 0,0,0},
+        {0,0,0, 0, 0, 0, 0,0,0},
     };
 }
 
@@ -103,11 +119,24 @@ void CMLifeTest::fromVector2Test()
     }
 }
 
-void CMLifeTest::getNeighboursTest()
+void CMLifeTest::getNeighbours8_1Test()
 {
     LifeField l = gliderLife();
+    auto ns = getNeighbours8(l);
+    auto alive = std::accumulate(ns.begin(), ns.end(), 0,
+        [](Cell s, Cell c) { return c == 0 ? s : s+1;});
+    QVERIFY(ns.size() == 8);
+    QVERIFY(alive == 4);
+}
 
-    //int ns = getNeighbours()
+void CMLifeTest::getNeighbours8_2Test()
+{
+    LifeField l = fromVector2(gliderShifted());
+    auto ns = getNeighbours8(l);
+    auto alive = std::accumulate(ns.begin(), ns.end(), 0,
+        [](Cell s, Cell c) { return c == 0 ? s : s+1;});
+    QVERIFY(ns.size() == 8);
+    QVERIFY(alive == 2);
 }
 
 void CMLifeTest::stepLifeTest()

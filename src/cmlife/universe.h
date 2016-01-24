@@ -116,6 +116,7 @@ template <typename T> Universe<Universe<T>> duplicate(const Universe<T>& u)
     return makeUniverseLR(u);
 }
 
+// TODO
 template <typename T, typename B> Universe<B> extend(
     const std::function<B(Universe<T>)>& mappingExtractor,
     const Universe<T>& u)

@@ -1,6 +1,7 @@
 #ifndef LIFE_H
 #define LIFE_H
 
+#include <functor.h>
 #include <universe.h>
 
 #include <algorithm>
@@ -39,17 +40,24 @@ const std::function<Universe<Universe<Cell>>(Universe<Cell>)> duplicateLife =
 
 const std::function<Cell(LifeRow)> value = [](const LifeRow& row)
 {
-    return 0; // TODO
+    return extract(row);
 };
 
-
-std::vector<Cell> getNeighbours(const LifeField& field)
+std::vector<Cell> getNeighbours8(const LifeField& field)
 {
-    return {
-        //extract and toLeft,
-        //extract and toRight
-        //value(toLeft(extract(field)))
+    std::vector<LifeRow> rows = {
+        left(extract(field)),
+        right(extract(field)),
+        extract(up(field)),
+        left(extract(up(field))),
+        right(extract(up(field))),
+        extract(down(field)),
+        left(extract(down(field))),
+        right(extract(down(field)))
     };
+
+    const std::function<Cell(LifeRow)> mapper = [](const LifeRow& row) { return value(row); };
+    return mapVector(mapper, rows);
 }
 
 
@@ -57,7 +65,7 @@ std::function<Cell(LifeField)> lifeRule =
     [](const LifeField& field)
 {
     auto curCell = extract(field);
-    auto neighbours = getNeighbours(field);
+    auto neighbours = getNeighbours8(field);
     auto aliveNeighbours = std::accumulate(neighbours.begin(), neighbours.end(), 0,
         [](Cell c, int cnt)
         {
