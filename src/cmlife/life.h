@@ -18,6 +18,9 @@ typedef Universe<U> U2;
 typedef U LifeRow;
 typedef U2 LifeField;
 
+const Cell AliveCell = 1;
+const Cell DeadCell  = 0;
+
 const std::function<LifeField(LifeField)> toLeft =
     [](const LifeField& field)
     {
@@ -65,14 +68,16 @@ std::function<Cell(LifeField)> lifeRule =
     [](const LifeField& field)
 {
     auto curCell = extract(field);
-    auto neighbours = getNeighbours8(field);
-    auto aliveNeighbours = std::accumulate(neighbours.begin(), neighbours.end(), 0,
-        [](Cell c, int cnt)
-        {
-            return 0; // TODO
-        });
+    auto ns = getNeighbours8(field);
 
-    return 0;  // TODO
+    auto aliveCnt = std::accumulate(ns.begin(), ns.end(), 0,
+        [](Cell s, Cell c) { return c == 0 ? s : s+1;});
+
+    switch (aliveCnt) {
+    case 2: return extract(curCell);
+    case 3: return AliveCell;
+    }
+    return DeadCell;
 };
 
 

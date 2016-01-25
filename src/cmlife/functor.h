@@ -23,6 +23,7 @@ std::vector<B> mapVector(
 }
 
 
+
 } // namespace cmlife
 
 
