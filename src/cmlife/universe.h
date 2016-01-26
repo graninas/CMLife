@@ -33,31 +33,31 @@ struct Universe
     }
 };
 
-template <typename T> Universe<T>
-left(const Universe<T>& u)
+template <typename T> UT
+left(const UT& u)
 {
-    Universe<T> newU { u.field, u.position - 1 };
+    UT newU { u.field, u.position - 1 };
     if (u.position == 0)
         newU.position = u.size() - 1;
     return newU;
 }
 
-template <typename T> Universe<T>
-right(const Universe<T>& u)
+template <typename T> UT
+right(const UT& u)
 {
-    Universe<T> newU { u.field, u.position + 1 };
+    UT newU { u.field, u.position + 1 };
     if (u.position == u.size() - 1)
         newU.position = 0;
     return newU;
 }
 
 // TODO: functions tail, iterate...
-template <typename T> std::vector<Universe<T>>
+template <typename T> std::vector<UT>
 tailOfGen(int count,
-    const std::function<Universe<T>(Universe<T>)>& generator,
-    Universe<T> item)
+    const std::function<UT(UT)>& generator,
+    UT item)
 {
-    std::vector<Universe<T>> items;
+    std::vector<UT> items;
     items.reserve(count);
 
     auto it = generator(item);
@@ -70,13 +70,12 @@ tailOfGen(int count,
 }
 
 // TODO: it's functional and imperative code mix.
-template <typename T> Universe<Universe<T>>
-makeUniverse(
-    const std::function<Universe<T>(Universe<T>)>& leftCreator,
-    const std::function<Universe<T>(Universe<T>)>& rightCreator,
-    const Universe<T>& u)
+template <typename T> UUT makeUniverse(
+    const std::function<UT(UT)>& leftCreator,
+    const std::function<UT(UT)>& rightCreator,
+    const UT& u)
 {
-    std::vector<Universe<T>> all = std::vector<Universe<T>>();
+    std::vector<UT> all = std::vector<UT>();
     all.reserve(u.size());
 
     // TODO: optimize it.
@@ -95,27 +94,26 @@ makeUniverse(
         all.insert(all.end(), rights.begin(), rights.end());
     }
 
-    Universe<Universe<T>> newU { all, u.position };
+    UUT newU { all, u.position };
     return newU;
 }
 
-template <typename T> Universe<Universe<T>>
-    makeUniverseLR(const Universe<T>& u)
+template <typename T> UUT
+    makeUniverseLR(const UT& u)
 {
-    const std::function<Universe<T>(Universe<T>)> leftCr = [](const Universe<T>& u1) {return left(u1); };
-    const std::function<Universe<T>(Universe<T>)> rightCr = [](const Universe<T>& u1) {return right(u1); };
+    const std::function<UT(UT)> leftCr = [](const UT& u1) {return left(u1); };
+    const std::function<UT(UT)> rightCr = [](const UT& u1) {return right(u1); };
 
     return makeUniverse(leftCr, rightCr, u);
 }
 
 // Functor implementation
 
-template <typename T>
-Universe<T> fmap(
+template <typename T> UT fmap(
     const std::function<T(T)>& f,
-    const Universe<T>& u)
+    const UT& u)
 {
-    Universe<T> newU;
+    UT newU;
     newU.position = u.position;
     newU.field = mapVector(f, u.field);
     return newU;
@@ -123,37 +121,37 @@ Universe<T> fmap(
 
 // Applicative implementation
 
-template <typename T> Universe<T> pure(const T& t)
+template <typename T> UT pure(const T& t)
 {
-    Universe<T> u {{t}, 0};
+    UT u {{t}, 0};
     return u;
 }
 
 // Comonad implementation
 
-template <typename T> T extract(const Universe<T>& u)
+template <typename T> T extract(const UT& u)
 {
     return u.field[u.position]; // TODO: unsafe.
 }
 
-template <typename T> UUT duplicate(const Universe<T>& u)
+template <typename T> UUT duplicate(const UT& u)
 {
     return makeUniverseLR(u);
 }
 
-template <typename T, typename B> Universe<B> extend(
-    const std::function<B(Universe<T>)>& mappingExtractor,
-    const Universe<T>& u)
+template <typename T, typename B> UB extend(
+    const std::function<B(UT)>& mappingExtractor,
+    const UT& u)
 {
     auto duplicated = duplicate(u);
     auto mapped = mapVector(mappingExtractor, duplicated.field);
-    Universe<B> newU {mapped, u.position};
+    UB newU {mapped, u.position};
     return newU;
 }
 
-template <typename T> T extract2(const Universe<Universe<T>>& u)
+template <typename T> T extract2(const UUT& uut)
 {
-    return extract(extract(u));
+    return extract(extract(uut));
 }
 
 template <typename T> UUUUT duplicate2(const UUT& u)

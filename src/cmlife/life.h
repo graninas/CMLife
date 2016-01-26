@@ -8,7 +8,6 @@
 
 namespace cmlife {
 
-
 typedef char Cell;
 
 // Tip: If we replace Cell to int, will be type mismatch (it's good).
@@ -62,7 +61,6 @@ std::vector<Cell> getNeighbours8(const LifeField& field)
     const std::function<Cell(LifeRow)> mapper = [](const LifeRow& row) { return value(row); };
     return mapVector(mapper, rows);
 }
-
 
 std::function<Cell(LifeField)> lifeRule =
     [](const LifeField& field)
