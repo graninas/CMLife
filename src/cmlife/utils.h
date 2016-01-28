@@ -22,17 +22,29 @@ template <typename T> Universe<Universe<T>>
     fromVector2(const std::vector<std::vector<T>>& v)
     {
         auto u = std::accumulate(v.begin(), v.end(), Universe<Universe<T>>(),
-        [](const Universe<Universe<T>>& u, const std::vector<T>& it)
-        {
-            Universe<Universe<T>> newU = u;
-            newU.field.push_back(fromVector(it));
-            return newU;
-        });
+            [](const Universe<Universe<T>>& u, const std::vector<T>& it)
+            {
+                Universe<Universe<T>> newU = u;
+                newU.field.push_back(fromVector(it));
+                return newU;
+            });
 
         u.position = 0;
-
         return u;
     }
+
+
+template <typename T> std::vector<std::vector<T>>
+toVector2(const Universe<Universe<T>>& u)
+{
+    std::vector<std::vector<T>> v;
+    v.reserve(u.size());
+        for (int i = 0; i < u.size(); ++i)
+        {
+            v.push_back(u.field[i].field);
+        }
+    return v;
+}
 
 } // namespace cmlife
 

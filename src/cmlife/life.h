@@ -78,7 +78,6 @@ std::function<Cell(LifeField)> lifeRule =
     return DeadCell;
 };
 
-
 }
 
 #endif // LIFE_H

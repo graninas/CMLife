@@ -6,6 +6,9 @@
 #include <utils.h>
 #include <life.h>
 
+#include <parallel_life.h>
+#include <parallel_universe.h>
+
 #include <vector>
 #include <string>
 #include <functional>
@@ -30,7 +33,11 @@ private Q_SLOTS:
     void fromVector2Test();
     void getNeighbours8_1Test();
     void getNeighbours8_2Test();
+
     void stepLifeTest();
+    void stepLifeAsyncWrapTest();
+    void stepLifeAsyncSingleTest();
+    void stepLifeAsyncTest();
 };
 
 CMLifeTest::CMLifeTest()
@@ -87,8 +94,8 @@ std::vector<std::vector<Cell>> gliderShifted2()
         {0,0,0, 0, 0, 0, 0,0,0},
         {0,0,0, 0, 0, 0, 0,0,0},
         {0,0,0, 0, 1, 0, 0,0,0},
-        {0,0,0, 1, 1, 1, 0,0,0},
-        {0,0,0, 1, 0, 0, 0,0,0},
+        {0,0,0, 1, 1, 0, 0,0,0},
+        {0,0,0, 1, 0, 1, 0,0,0},
         {0,0,0, 0, 0, 0, 0,0,0},
         {0,0,0, 0, 0, 0, 0,0,0},
         {0,0,0, 0, 0, 0, 0,1,1},
@@ -142,6 +149,7 @@ void printField(const LifeField& life)
             std::cout << (life.field[i].field[j] ? "1" : "0");
         }
     }
+    std::cout << "\n";
 }
 
 void CMLifeTest::makeUniverseTest()
@@ -237,6 +245,11 @@ void CMLifeTest::stepLifeTest()
     LifeField l3 = stepWith(lifeRule, l2);
     LifeField l4 = stepWith(lifeRule, l3);
 
+//    printField(l1);
+//    printField(l2);
+//    printField(l3);
+//    printField(l4);
+
     QVERIFY(!l1.field.empty());
     auto rowSize = l1.field[0].size();
 
@@ -246,11 +259,56 @@ void CMLifeTest::stepLifeTest()
         QVERIFY(l2.field[i].size() == rowSize);
     }
 
-    printField(l1);
-    printField(l2);
-    printField(l3);
-    printField(l4);
+    QVERIFY(toVector2(l1) == gliderShifted1());
+    QVERIFY(toVector2(l2) == gliderShifted2());
+    QVERIFY(toVector2(l3) == gliderShifted3());
+    QVERIFY(toVector2(l4) == gliderShifted4());
 }
+
+void CMLifeTest::stepLifeAsyncWrapTest()
+{
+    std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
+
+    LifeField l1 = f1.get();
+    printField(l1);
+
+    QVERIFY(toVector2(l1) == gliderShifted1());
+}
+
+void CMLifeTest::stepLifeAsyncSingleTest()
+{
+    std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
+    std::future<LifeField> f2 = stepWithPar(lifeRule, f1);
+
+//    LifeField l1 = f1.get();
+    LifeField l2 = f2.get();
+
+//    printField(l1);
+    printField(l2);
+
+    QVERIFY(toVector2(l2) == gliderShifted2());
+}
+
+void CMLifeTest::stepLifeAsyncTest()
+{
+    std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
+    std::future<LifeField> f2 = stepWithPar(lifeRule, f1);
+    std::future<LifeField> f3 = stepWithPar(lifeRule, f2);
+    std::future<LifeField> f4 = stepWithPar(lifeRule, f3);
+
+//    LifeField l1 = f1.get(); // Presentation tip: Can't get value: deattached future.
+//    LifeField l2 = f2.get();
+//    LifeField l3 = f3.get();
+    LifeField l4 = f4.get();
+
+//    printField(l1);
+//    printField(l2);
+//    printField(l3);
+    printField(l4);
+
+    QVERIFY(toVector2(l4) == gliderShifted4());
+}
+
 
 QTEST_APPLESS_MAIN(CMLifeTest)
 

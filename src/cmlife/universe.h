@@ -51,6 +51,7 @@ right(const UT& u)
     return newU;
 }
 
+// TODO: parallelize it here.
 // TODO: functions tail, iterate...
 template <typename T> std::vector<UT>
 tailOfGen(int count,
@@ -69,6 +70,7 @@ tailOfGen(int count,
     return items;
 }
 
+// TODO: parallelize it here.
 // TODO: it's functional and imperative code mix.
 template <typename T> UUT makeUniverse(
     const std::function<UT(UT)>& leftCreator,

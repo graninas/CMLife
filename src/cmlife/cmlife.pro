@@ -15,7 +15,9 @@ HEADERS += \
     comonad.h \
     and_combinator.h \
     applicative.h \
-    functor.h
+    functor.h \
+    parallel_life.h \
+    parallel_universe.h
 
 unix {
     target.path = /usr/lib
