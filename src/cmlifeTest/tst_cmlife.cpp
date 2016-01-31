@@ -38,6 +38,9 @@ private Q_SLOTS:
     void stepLifeAsyncWrapTest();
     void stepLifeAsyncSingleTest();
     void stepLifeAsyncTest();
+
+    void stepLifeBenchmarkTest();
+    void stepLifeAsyncBenchmarkTest();
 };
 
 CMLifeTest::CMLifeTest()
@@ -280,10 +283,7 @@ void CMLifeTest::stepLifeAsyncSingleTest()
     std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
     std::future<LifeField> f2 = stepWithPar(lifeRule, f1);
 
-//    LifeField l1 = f1.get();
     LifeField l2 = f2.get();
-
-//    printField(l1);
     printField(l2);
 
     QVERIFY(toVector2(l2) == gliderShifted2());
@@ -296,17 +296,40 @@ void CMLifeTest::stepLifeAsyncTest()
     std::future<LifeField> f3 = stepWithPar(lifeRule, f2);
     std::future<LifeField> f4 = stepWithPar(lifeRule, f3);
 
-//    LifeField l1 = f1.get(); // Presentation tip: Can't get value: deattached future.
-//    LifeField l2 = f2.get();
-//    LifeField l3 = f3.get();
-    LifeField l4 = f4.get();
+// Presentation tip: Can't get value from f1, f2, f3: deattached future.
+//    LifeField l1 = f1.get(); // Invalid
 
-//    printField(l1);
-//    printField(l2);
-//    printField(l3);
+    LifeField l4 = f4.get();
     printField(l4);
 
     QVERIFY(toVector2(l4) == gliderShifted4());
+}
+
+
+
+void CMLifeTest::stepLifeBenchmarkTest()
+{
+    QBENCHMARK {
+        LifeField l1 = fromVector2(gliderShifted1());
+        LifeField l2 = stepWith(lifeRule, l1);
+        LifeField l3 = stepWith(lifeRule, l2);
+        LifeField l4 = stepWith(lifeRule, l3);
+
+        QVERIFY(toVector2(l4) == gliderShifted4());
+    }
+}
+
+void CMLifeTest::stepLifeAsyncBenchmarkTest()
+{
+    QBENCHMARK {
+        std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
+        std::future<LifeField> f2 = stepWithPar(lifeRule, f1);
+        std::future<LifeField> f3 = stepWithPar(lifeRule, f2);
+        std::future<LifeField> f4 = stepWithPar(lifeRule, f3);
+
+        LifeField l4 = f4.get();
+        QVERIFY(toVector2(l4) == gliderShifted4());
+    }
 }
 
 
