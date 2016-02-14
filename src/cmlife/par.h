@@ -9,7 +9,6 @@
 namespace cmlife
 {
 
-/*
 template <typename A, typename B>
 std::function<std::future<B>(A)> par(
     const std::function<B(A)> mapper)
@@ -21,14 +20,13 @@ std::function<std::future<B>(A)> par(
         );
     };
 }
-*/
 
 // Tip: this is monadic join!!
 template <typename B>
 std::future<std::vector<B>> joinPars(
     std::vector<std::future<B>>& pars)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [&]() // N.B., future requires modification so the & is here.
     {
         std::vector<B> bs;
         bs.reserve(pars.size());
@@ -47,14 +45,7 @@ std::vector<B> mapVectorPar(
     const std::function<B(A)>& mapper,
     const std::vector<A>& va)
 {
-
-    const std::function<std::future<B>(A)> pMapper = [&](const A& a)
-    {
-        return std::async(std::launch::async, [&]()
-        {
-            return mapper(a);
-        });
-    };
+    const auto pMapper = par(mapper);
 
     std::vector<std::future<B>> pars;
     pars.reserve(va.size());
