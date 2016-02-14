@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <future>
 
+#include "functor.h"
+
 namespace cmlife
 {
 
@@ -40,17 +42,26 @@ std::future<std::vector<B>> joinPars(
     });
 }
 
-template <typename A, typename B>
-std::vector<B> mapVectorPar(
+/* A boosted version for the vector (uses reserve()). */
+template <typename A, typename B, template <class ...> class Container = std::vector>
+std::vector<B> mapPar(
     const std::function<B(A)>& mapper,
     const std::vector<A>& va)
 {
-    const auto pMapper = par(mapper);
-
     std::vector<std::future<B>> pars;
     pars.reserve(va.size());
-    std::transform(va.begin(), va.end(), std::back_inserter(pars), pMapper);
+    std::transform(va.begin(), va.end(), std::back_inserter(pars), par(mapper));
     std::future<std::vector<B>> pRes = joinPars(pars);
+    return pRes.get();
+}
+
+template <typename A, typename B, template <class ...> class Container>
+Container<B> mapPar(
+    const std::function<B(A)>& mapper,
+    const Container<A>& va)
+{
+    Container<std::future<B>> pars = map(par(mapper), va);
+    std::future<Container<B>> pRes = joinPars(pars);
     return pRes.get();
 }
 
@@ -60,7 +71,7 @@ template <typename T> UT fmapPar(
 {
     UT newU;
     newU.position = u.position;
-    newU.field = mapVectorPar(f, u.field);
+    newU.field = mapPar(f, u.field);
     return newU;
 }
 

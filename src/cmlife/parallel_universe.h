@@ -23,7 +23,7 @@ template <typename T> UUT fmap2Par(
 
     UUT newU;
     newU.position = uuut.position;
-    newU.field = mapVectorPar(fmapper, uuut.field);
+    newU.field = mapPar(fmapper, uuut.field);
     return newU;
 }
 
