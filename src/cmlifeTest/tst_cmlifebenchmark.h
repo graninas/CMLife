@@ -15,9 +15,9 @@ private Q_SLOTS:
     void stepLifeBenchmarkTest();
     void stepLifeAsyncBenchmarkTest();
 
+    void stepLifeHugeParBenchmarkTest();
     void stepLifeHugeBenchmarkTest();
     void stepLifeHugeAsyncBenchmarkTest();
-    void stepLifeHugeParBenchmarkTest();
 };
 
 #endif // TST_CMLIFEBENCHMARK_H

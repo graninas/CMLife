@@ -90,7 +90,7 @@ void CMLifeTest::universe2ComonadTest()
 
     const std::function<U(U2)> exF =
         [](const U2& ux) { return extract(ux); };
-    U2 newU = {mapVector(exF, mapped), 0};
+    U2 newU = {cmlife::map(exF, mapped), 0};
 
     QVERIFY(duplicated.size() == 3);
 }

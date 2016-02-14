@@ -56,8 +56,19 @@ void CMLifeBenchmarkTest::stepLifeAsyncBenchmarkTest()
     }
 }
 
+void CMLifeBenchmarkTest::stepLifeHugeParBenchmarkTest()
+{
+    auto rule = lifeRule();
+    LifeField l1 = fromVector2(gliderLifeHuge());
+    QBENCHMARK {
+        LifeField l2 = stepWithPar(rule, l1);
+        QVERIFY(l2.size() == HugeSize);
+    }
+}
+
 void CMLifeBenchmarkTest::stepLifeHugeBenchmarkTest()
 {
+/*
     auto rule = lifeRule();
     LifeField l1 = fromVector2(gliderLifeHuge());
 
@@ -66,10 +77,12 @@ void CMLifeBenchmarkTest::stepLifeHugeBenchmarkTest()
         LifeField l3 = stepWith(rule, l2);
         LifeField l4 = stepWith(rule, l3);
     }
+    */
 }
 
 void CMLifeBenchmarkTest::stepLifeHugeAsyncBenchmarkTest()
 {
+/*
     auto rule = lifeRule();
     LifeField l1 = fromVector2(gliderLifeHuge());
     QBENCHMARK {
@@ -81,16 +94,5 @@ void CMLifeBenchmarkTest::stepLifeHugeAsyncBenchmarkTest()
         LifeField l4 = f4.get();
         QVERIFY(l4.size() == HugeSize);
     }
+    */
 }
-
-void CMLifeBenchmarkTest::stepLifeHugeParBenchmarkTest()
-{
-    auto rule = lifeRule();
-    LifeField l1 = fromVector2(gliderLifeHuge());
-    QBENCHMARK {
-        LifeField l2 = stepWithPar(rule, l1);
-        QVERIFY(l2.size() == HugeSize);
-    }
-}
-
-

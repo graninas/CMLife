@@ -54,6 +54,16 @@ std::vector<B> mapVectorPar(
     return pRes.get();
 }
 
+template <typename T> UT fmapPar(
+    const std::function<T(T)>& f,
+    const UT& u)
+{
+    UT newU;
+    newU.position = u.position;
+    newU.field = mapVectorPar(f, u.field);
+    return newU;
+}
+
 } // namespace cmlife
 
 #endif // PAR_H

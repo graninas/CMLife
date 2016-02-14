@@ -117,7 +117,7 @@ template <typename T> UT fmap(
 {
     UT newU;
     newU.position = u.position;
-    newU.field = mapVector(f, u.field);
+    newU.field = map(f, u.field);
     return newU;
 }
 
@@ -146,7 +146,7 @@ template <typename T, typename B> UB extend(
     const UT& u)
 {
     auto duplicated = duplicate(u);
-    auto mapped = mapVector(mappingExtractor, duplicated.field);
+    auto mapped = map(mappingExtractor, duplicated.field);
     UB newU {mapped, u.position};
     return newU;
 }
@@ -182,13 +182,13 @@ template <typename T> UUT fmap2(
     {
         UT newUt;
         newUt.position = uuut2.position;
-        newUt.field = mapVector(mapExtr, uuut2.field);
+        newUt.field = map(mapExtr, uuut2.field);
         return newUt;
     };
 
     UUT newU;
     newU.position = uuut.position;
-    newU.field = mapVector(fmapper, uuut.field);
+    newU.field = map(fmapper, uuut.field);
     return newU;
 }
 

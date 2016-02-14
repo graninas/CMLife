@@ -10,19 +10,15 @@
 namespace cmlife
 {
 
-// TODO: don't want use std::transform.
-template <typename A, typename B>
-std::vector<B> mapVector(
+template<typename A, typename B, template <class ...> class Container>
+Container<B> map(
     const std::function<B(A)>& mapper,
-    const std::vector<A>& va)
+    const Container<A>& va)
 {
-    std::vector<B> res;
-    res.reserve(va.size());
-    std::transform(va.begin(), va.end(), std::back_inserter(res), mapper);
-    return res;
+    Container<B> vb;
+    std::transform(va.begin(), va.end(), std::back_inserter(vb), mapper);
+    return vb;
 }
-
-
 
 
 } // namespace cmlife
