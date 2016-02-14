@@ -12,7 +12,11 @@ QMAKE_CXXFLAGS += -std=c++11
 
 
 SOURCES += \
-    tst_cmlife.cpp
+    ..\cmlife\life.cpp \ #this is a temporary hack
+    tst_cmlife.cpp \
+    main.cpp \
+    tst_cmlifebenchmark.cpp \
+    test_data.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/cpp_functional_core/release/ -lcpp_functional_core
@@ -59,3 +63,8 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../s
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/release/libcmlife.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/debug/libcmlife.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/libcmlife.a
+
+HEADERS += \
+    tst_cmlife.h \
+    tst_cmlifebenchmark.h \
+    test_data.h

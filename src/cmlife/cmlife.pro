@@ -6,7 +6,8 @@ CONFIG += staticlib
 
 QMAKE_CXXFLAGS += -std=c++11
 
-SOURCES +=
+SOURCES += \
+    life.cpp
 
 HEADERS += \
     universe.h \
@@ -17,7 +18,9 @@ HEADERS += \
     applicative.h \
     functor.h \
     parallel_life.h \
-    parallel_universe.h
+    parallel_universe.h \
+    par.h \
+    async_universe.h
 
 unix {
     target.path = /usr/lib

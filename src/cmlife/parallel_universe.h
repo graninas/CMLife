@@ -2,17 +2,13 @@
 #define PARALLEL_UNIVERSE_H
 
 #include "universe.h"
+#include "par.h"
 
 #include <future>
 
 namespace cmlife
 {
 
-#define FUUUUT std::future<UUUUT>
-#define FUUUT std::future<UUUT>
-#define FUUT std::future<UUT>
-#define FUT std::future<UT>
-#define FT std::future<T>
 
 template <typename T> UUT fmap2Par(
     const func<T(UUT)>& mapExtr,
@@ -28,33 +24,24 @@ template <typename T> UUT fmap2Par(
 
     UUT newU;
     newU.position = uuut.position;
-    newU.field = mapVector(fmapper, uuut.field);
+    newU.field = mapVectorPar(fmapper, uuut.field);
     return newU;
 }
 
-template <typename T> FUUT extend2Par(
-    FUUT& fuut,
+template <typename T> UUT extend2Par(
+    const UUT& uut,
     const func<T(UUT)>& mapExtr)
 {
-    return std::async(std::launch::async, [&]() // DANGER!!
-    {
-        fuut.wait();
-        auto uut = fuut.get();
-        return extend2(uut, mapExtr);
-    });
+    UUUUT duplicated = duplicate2(uut);
+    UUT res = fmap2Par(mapExtr, duplicated);
+    return res;
 }
 
-template <typename T> FUUT stepWithPar(
+template <typename T> UUT stepWithPar(
     const func<T(UUT)>& mapExtr,
-    FUUT& fuut)
+    UUT& uut)
 {
-    return extend2Par(fuut, mapExtr);
-}
-
-template <typename T> FUUT
-   par(const UUT& uut)
-{
-    return std::async(std::launch::async, [=]() { return uut; });
+    return extend2Par(uut, mapExtr);
 }
 
 

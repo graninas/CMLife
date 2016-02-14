@@ -1,13 +1,17 @@
+#include "tst_cmlife.h"
+
 #include <QString>
 #include <QtTest>
 
-#include <comonad.h>
-#include <universe.h>
-#include <utils.h>
-#include <life.h>
+#include "comonad.h"
+#include "universe.h"
+#include "utils.h"
+#include "life.h"
+#include "parallel_life.h"
+#include "async_universe.h"
+#include "parallel_universe.h"
 
-#include <parallel_life.h>
-#include <parallel_universe.h>
+#include "test_data.h"
 
 #include <vector>
 #include <string>
@@ -18,127 +22,9 @@
 
 using namespace cmlife;
 
-class CMLifeTest : public QObject
-{
-    Q_OBJECT
-
-public:
-    CMLifeTest();
-
-private Q_SLOTS:
-    void makeUniverseTest();
-    void universeComonadTest();
-    void universe2ComonadTest();
-
-    void fromVector2Test();
-    void getNeighbours8_1Test();
-    void getNeighbours8_2Test();
-
-    void stepLifeTest();
-    void stepLifeAsyncWrapTest();
-    void stepLifeAsyncSingleTest();
-    void stepLifeAsyncTest();
-
-    void stepLifeBenchmarkTest();
-    void stepLifeAsyncBenchmarkTest();
-};
-
 CMLifeTest::CMLifeTest()
 {
-}
 
-
-U testUniverse()
-{
-    U u;
-    u.position = 0;
-    u.field = {1,2,3,4,5,6,7,8,9,10};
-    return u;
-}
-
-std::vector<std::vector<Cell>> glider()
-{
-    return {
-        {1, 1, 1},
-        {1, 0, 0},
-        {0, 1, 0}
-    };
-}
-
-std::vector<std::vector<Cell>> oscillator()
-{
-    return {
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 1, 1, 1, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0}
-    };
-}
-
-std::vector<std::vector<Cell>> gliderShifted1()
-{
-    return {
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 1, 1, 1, 0,0,0},
-        {0,0,0, 1, 0, 0, 0,0,0},
-        {0,0,0, 0, 1, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,1,1},
-        {0,0,0, 0, 0, 0, 0,1,1},
-    };
-}
-
-std::vector<std::vector<Cell>> gliderShifted2()
-{
-    return {
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 1, 0, 0,0,0},
-        {0,0,0, 1, 1, 0, 0,0,0},
-        {0,0,0, 1, 0, 1, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,1,1},
-        {0,0,0, 0, 0, 0, 0,1,1},
-    };
-}
-
-std::vector<std::vector<Cell>> gliderShifted3()
-{
-    return {
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 1, 1, 0, 0,0,0},
-        {0,0,0, 1, 0, 1, 0,0,0},
-        {0,0,0, 1, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,0,0},
-        {0,0,0, 0, 0, 0, 0,1,1},
-        {0,0,0, 0, 0, 0, 0,1,1},
-    };
-}
-
-std::vector<std::vector<Cell>> gliderShifted4()
-{
-    return {
-        {0,0, 0, 0, 0, 0, 0,0,0},
-        {0,0, 0, 0, 0, 0, 0,0,0},
-        {0,0, 0, 1, 1, 0, 0,0,0},
-        {0,0, 1, 1, 0, 0, 0,0,0},
-        {0,0, 0, 0, 1, 0, 0,0,0},
-        {0,0, 0, 0, 0, 0, 0,0,0},
-        {0,0, 0, 0, 0, 0, 0,0,0},
-        {0,0, 0, 0, 0, 0, 0,1,1},
-        {0,0, 0, 0, 0, 0, 0,1,1},
-    };
-}
-
-LifeField gliderLife()
-{
-    return fromVector2(glider());
 }
 
 void printField(const LifeField& life)
@@ -195,9 +81,10 @@ void CMLifeTest::universe2ComonadTest()
     auto duplicated = duplicate(u1);
     std::vector<U2> mapped;
 
+    auto rule = lifeRule();
     for (int i = 0; i < duplicated.size(); ++i)
     {
-        auto ux = extend(lifeRule, duplicated.field[i]);
+        auto ux = extend(rule, duplicated.field[i]);
         mapped.push_back(duplicate(ux));
     }
 
@@ -224,7 +111,7 @@ void CMLifeTest::fromVector2Test()
 void CMLifeTest::getNeighbours8_1Test()
 {
     LifeField l = gliderLife();
-    auto ns = getNeighbours8(l);
+    std::vector<Cell> ns = getNeighbours8(l);
     auto alive = std::accumulate(ns.begin(), ns.end(), 0,
         [](Cell s, Cell c) { return c == 0 ? s : s+1;});
     QVERIFY(ns.size() == 8);
@@ -234,7 +121,7 @@ void CMLifeTest::getNeighbours8_1Test()
 void CMLifeTest::getNeighbours8_2Test()
 {
     LifeField l = fromVector2(gliderShifted1());
-    auto ns = getNeighbours8(l);
+    std::vector<Cell> ns = getNeighbours8(l);
     auto alive = std::accumulate(ns.begin(), ns.end(), 0,
         [](Cell s, Cell c) { return c == 0 ? s : s+1;});
     QVERIFY(ns.size() == 8);
@@ -243,10 +130,11 @@ void CMLifeTest::getNeighbours8_2Test()
 
 void CMLifeTest::stepLifeTest()
 {
+    auto rule = lifeRule();
     LifeField l1 = fromVector2(gliderShifted1());
-    LifeField l2 = stepWith(lifeRule, l1);
-    LifeField l3 = stepWith(lifeRule, l2);
-    LifeField l4 = stepWith(lifeRule, l3);
+    LifeField l2 = stepWith(rule, l1);
+    LifeField l3 = stepWith(rule, l2);
+    LifeField l4 = stepWith(rule, l3);
 
 //    printField(l1);
 //    printField(l2);
@@ -270,7 +158,7 @@ void CMLifeTest::stepLifeTest()
 
 void CMLifeTest::stepLifeAsyncWrapTest()
 {
-    std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
+    std::future<LifeField> f1 = async(fromVector2(gliderShifted1()));
 
     LifeField l1 = f1.get();
     printField(l1);
@@ -280,8 +168,9 @@ void CMLifeTest::stepLifeAsyncWrapTest()
 
 void CMLifeTest::stepLifeAsyncSingleTest()
 {
-    std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
-    std::future<LifeField> f2 = stepWithPar(lifeRule, f1);
+    auto rule = lifeRule();
+    std::future<LifeField> f1 = async(fromVector2(gliderShifted1()));
+    std::future<LifeField> f2 = stepWithAsync(rule, f1);
 
     LifeField l2 = f2.get();
     printField(l2);
@@ -291,10 +180,11 @@ void CMLifeTest::stepLifeAsyncSingleTest()
 
 void CMLifeTest::stepLifeAsyncTest()
 {
-    std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
-    std::future<LifeField> f2 = stepWithPar(lifeRule, f1);
-    std::future<LifeField> f3 = stepWithPar(lifeRule, f2);
-    std::future<LifeField> f4 = stepWithPar(lifeRule, f3);
+    auto rule = lifeRule();
+    std::future<LifeField> f1 = async(fromVector2(gliderShifted1()));
+    std::future<LifeField> f2 = stepWithAsync(rule, f1);
+    std::future<LifeField> f3 = stepWithAsync(rule, f2);
+    std::future<LifeField> f4 = stepWithAsync(rule, f3);
 
 // Presentation tip: Can't get value from f1, f2, f3: deattached future.
 //    LifeField l1 = f1.get(); // Invalid
@@ -305,34 +195,5 @@ void CMLifeTest::stepLifeAsyncTest()
     QVERIFY(toVector2(l4) == gliderShifted4());
 }
 
-
-
-void CMLifeTest::stepLifeBenchmarkTest()
-{
-    QBENCHMARK {
-        LifeField l1 = fromVector2(gliderShifted1());
-        LifeField l2 = stepWith(lifeRule, l1);
-        LifeField l3 = stepWith(lifeRule, l2);
-        LifeField l4 = stepWith(lifeRule, l3);
-
-        QVERIFY(toVector2(l4) == gliderShifted4());
-    }
-}
-
-void CMLifeTest::stepLifeAsyncBenchmarkTest()
-{
-    QBENCHMARK {
-        std::future<LifeField> f1 = par(fromVector2(gliderShifted1()));
-        std::future<LifeField> f2 = stepWithPar(lifeRule, f1);
-        std::future<LifeField> f3 = stepWithPar(lifeRule, f2);
-        std::future<LifeField> f4 = stepWithPar(lifeRule, f3);
-
-        LifeField l4 = f4.get();
-        QVERIFY(toVector2(l4) == gliderShifted4());
-    }
-}
-
-
-QTEST_APPLESS_MAIN(CMLifeTest)
-
-#include "tst_cmlife.moc"
+//QTEST_APPLESS_MAIN(CMLifeTest)
+//#include "tst_cmlife.moc"
