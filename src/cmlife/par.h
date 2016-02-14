@@ -60,7 +60,7 @@ Container<B> mapPar(
     const std::function<B(A)>& mapper,
     const Container<A>& va)
 {
-    Container<std::future<B>> pars = map(par(mapper), va);
+    Container<std::future<B>> pars = fp::map(par(mapper), va);
     std::future<Container<B>> pRes = joinPars(pars);
     return pRes.get();
 }

@@ -17,7 +17,7 @@ template <typename T> UUT fmap2Par(
     {
         UT newUt;
         newUt.position = uuut2.position;
-        newUt.field = map(mapExtr, uuut2.field);
+        newUt.field = fp::map(mapExtr, uuut2.field);
         return newUt;
     };
 

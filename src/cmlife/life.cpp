@@ -21,7 +21,7 @@ std::vector<Cell> getNeighbours8(const LifeField& field)
     };
 
     const std::function<Cell(LifeRow)> mapper = [](const LifeRow& row) { return value(row); };
-    return map(mapper, rows);
+    return fp::map(mapper, rows);
 }
 
 std::function<Cell(LifeField)> lifeRule()
