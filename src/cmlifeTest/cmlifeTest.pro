@@ -16,7 +16,8 @@ SOURCES += \
     tst_cmlife.cpp \
     main.cpp \
     tst_cmlifebenchmark.cpp \
-    test_data.cpp
+    test_data.cpp \
+    tst_pregnancy_oscillator.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/cpp_functional_core/release/ -lcpp_functional_core
@@ -67,4 +68,5 @@ else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/libcmlife.a
 HEADERS += \
     tst_cmlife.h \
     tst_cmlifebenchmark.h \
-    test_data.h
+    test_data.h \
+    tst_pregnancy_oscillator.h

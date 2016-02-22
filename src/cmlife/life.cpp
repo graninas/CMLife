@@ -1,10 +1,5 @@
 #include "life.h"
 
-#include <functor.h>
-#include <universe.h>
-
-#include <algorithm>
-
 namespace cmlife {
 
 std::vector<Cell> getNeighbours8(const LifeField& field)

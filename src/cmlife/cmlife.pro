@@ -7,7 +7,8 @@ CONFIG += staticlib
 QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += \
-    life.cpp
+    life.cpp \
+    pregnancy_oscillator.cpp
 
 HEADERS += \
     universe.h \
@@ -19,7 +20,8 @@ HEADERS += \
     parallel_life.h \
     parallel_universe.h \
     par.h \
-    async_universe.h
+    async_universe.h \
+    pregnancy_oscillator.h
 
 unix {
     target.path = /usr/lib

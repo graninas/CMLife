@@ -141,7 +141,8 @@ template <typename T> UUT duplicate(const UT& u)
     return makeUniverseLR(u);
 }
 
-template <typename T, typename B> UB extend(
+template <typename T, typename B>
+UB extend(
     const std::function<B(UT)>& mappingExtractor,
     const UT& u)
 {
@@ -193,21 +194,29 @@ template <typename T> UUT fmap2(
 }
 
 template <typename T> UUT extend2(
-    const UUT& uut,
-    const func<T(UUT)>& mapExtr)
+    const func<T(UUT)>& mapExtr,
+    const UUT& uut)
 {
     UUUUT duplicated = duplicate2(uut);
     UUT res = fmap2(mapExtr, duplicated);
     return res;
 }
 
+/* 2 dims alias */
 template <typename T> UUT stepWith(
     const func<T(UUT)>& mapExtr,
     const UUT& uut)
 {
-    return extend2(uut, mapExtr);
+    return extend2(mapExtr, uut);
 }
 
+/* 1 dim alias */
+template <typename T> UT stepWith(
+    const func<T(UT)>& mapExtr,
+    const UT& ut)
+{
+    return extend(mapExtr, ut);
+}
 
 
 } // namespace cmlife

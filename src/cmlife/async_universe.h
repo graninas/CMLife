@@ -22,7 +22,7 @@ template <typename T> FUUT extend2Async(
     {
         fuut.wait();
         auto uut = fuut.get();
-        return extend2(uut, mapExtr);
+        return extend2(mapExtr, uut);
     });
 }
 

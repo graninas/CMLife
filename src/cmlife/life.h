@@ -1,10 +1,9 @@
 #ifndef LIFE_H
 #define LIFE_H
 
+#include <algorithm>
 #include <functor.h>
 #include <universe.h>
-
-#include <algorithm>
 
 namespace cmlife {
 
