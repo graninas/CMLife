@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+#include <utility>
 
 #include <functor.h>
 #include <applicative.h>
@@ -12,6 +13,17 @@ using namespace std;
 
 namespace cmlife
 {
+
+/*
+Could we do so?
+
+template <class T> using UT = Universe<T>;
+template <class T> using UUT = Universe<Universe<T>>;
+template <class T> using UUUT = Universe<Universe<Universe<T>>>;
+template <class T> using UUUUT = Universe<Universe<Universe<Universe<T>>>>;
+
+// This leads to long UT<T>, but not short UT
+*/
 
 #define UT Universe<T>
 #define UUT Universe<Universe<T>>
@@ -70,34 +82,22 @@ tailOfGen(int count,
     return items;
 }
 
-// TODO: parallelize it here.
-// TODO: it's functional and imperative code mix.
 template <typename T> UUT makeUniverse(
-    const std::function<UT(UT)>& leftCreator,
-    const std::function<UT(UT)>& rightCreator,
+    const func<UT(UT)>& leftCreator,
+    const func<UT(UT)>& rightCreator,
     const UT& u)
 {
-    std::vector<UT> all = std::vector<UT>();
+    std::vector<UT> lefts  = tailOfGen(u.position, leftCreator, u);
+    std::vector<UT> rights = tailOfGen(u.size() - u.position - 1, rightCreator, u);
+
+    std::vector<UT> all;
+    //all.swap(lefts);
     all.reserve(u.size());
-
-    // TODO: optimize it.
-    if (u.position > 0)
-    {
-        auto lefts = tailOfGen(u.position, leftCreator, u);
-        all.insert(all.end(), lefts.begin(), lefts.end());
-    }
-
+    all.insert(all.end(), lefts.begin(), lefts.end());
     all.push_back(u);
+    all.insert(all.end(), rights.begin(), rights.end());
 
-    // TODO: optimize it.
-    if (u.position < u.size() - 1)
-    {
-        auto rights = tailOfGen(u.size() - u.position - 1, rightCreator, u);
-        all.insert(all.end(), rights.begin(), rights.end());
-    }
-
-    UUT newU { all, u.position };
-    return newU;
+    return { std::move(all), u.position };
 }
 
 template <typename T> UUT
@@ -112,21 +112,17 @@ template <typename T> UUT
 // Functor implementation
 
 template <typename T> UT fmap(
-    const std::function<T(T)>& f,
+    const func<T(T)>& f,
     const UT& u)
 {
-    UT newU;
-    newU.position = u.position;
-    newU.field = fp::map(f, u.field);
-    return newU;
+    return { fp::map(f, u.field), u.position };
 }
 
 // Applicative implementation
 
 template <typename T> UT pure(const T& t)
 {
-    UT u {{t}, 0};
-    return u;
+    return {{t}, 0};
 }
 
 // Comonad implementation
@@ -143,13 +139,11 @@ template <typename T> UUT duplicate(const UT& u)
 
 template <typename T, typename B>
 UB extend(
-    const std::function<B(UT)>& mappingExtractor,
+    const func<B(UT)>& f,
     const UT& u)
 {
-    auto duplicated = duplicate(u);
-    auto mapped = fp::map(mappingExtractor, duplicated.field);
-    UB newU {mapped, u.position};
-    return newU;
+    UUT duplicated = duplicate(u);
+    return { fp::map(f, duplicated.field), u.position };
 }
 
 template <typename T> T extract2(const UUT& uut)
@@ -176,46 +170,42 @@ template <typename T> UUUUT duplicate2(const UUT& u)
 }
 
 template <typename T> UUT fmap2(
-    const func<T(UUT)>& mapExtr,
+    const func<T(UUT)>& f,
     const UUUUT& uuut)
 {
     const func<UT(UUUT)> fmapper = [=](const UUUT& uuut2)
     {
         UT newUt;
         newUt.position = uuut2.position;
-        newUt.field = fp::map(mapExtr, uuut2.field);
+        newUt.field = fp::map(f, uuut2.field);
         return newUt;
     };
 
-    UUT newU;
-    newU.position = uuut.position;
-    newU.field = fp::map(fmapper, uuut.field);
-    return newU;
+    return { fp::map(fmapper, uuut.field), uuut.position };
 }
 
 template <typename T> UUT extend2(
-    const func<T(UUT)>& mapExtr,
+    const func<T(UUT)>& f,
     const UUT& uut)
 {
     UUUUT duplicated = duplicate2(uut);
-    UUT res = fmap2(mapExtr, duplicated);
-    return res;
+    return fmap2(f, duplicated);
 }
 
 /* 2 dims alias */
 template <typename T> UUT stepWith(
-    const func<T(UUT)>& mapExtr,
+    const func<T(UUT)>& f,
     const UUT& uut)
 {
-    return extend2(mapExtr, uut);
+    return extend2(f, uut);
 }
 
 /* 1 dim alias */
 template <typename T> UT stepWith(
-    const func<T(UT)>& mapExtr,
+    const func<T(UT)>& f,
     const UT& ut)
 {
-    return extend(mapExtr, ut);
+    return extend(f, ut);
 }
 
 

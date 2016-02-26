@@ -28,7 +28,7 @@ std::vector<std::vector<cmlife::Cell>> gliderShifted4();
 
 cmlife::LifeField gliderLife();
 
-const int HugeSize = 50;
+const int HugeSize = 100;
 std::vector<std::vector<cmlife::Cell>> gliderLifeHuge();
 
 #endif // TEST_DATA_H

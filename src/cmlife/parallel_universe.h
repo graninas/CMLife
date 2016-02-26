@@ -9,24 +9,6 @@
 namespace cmlife
 {
 
-template <typename T> UUT fmap2Par(
-    const func<T(UUT)>& mapExtr,
-    const UUUUT& uuut)
-{
-    const func<UT(UUUT)> fmapper = [=](const UUUT& uuut2)
-    {
-        UT newUt;
-        newUt.position = uuut2.position;
-        newUt.field = fp::map(mapExtr, uuut2.field);
-        return newUt;
-    };
-
-    UUT newU;
-    newU.position = uuut.position;
-    newU.field = mapPar(fmapper, uuut.field);
-    return newU;
-}
-
 /*
  * Parallel duplicate2Par slows down the computations against parallel fmap2Par only (2 times).
 template <typename T> UUUUT duplicate2Par(const UUT& u)
@@ -48,20 +30,51 @@ template <typename T> UUUUT duplicate2Par(const UUT& u)
 }
 */
 
-template <typename T> UUT extend2Par(
-    const UUT& uut,
-    const func<T(UUT)>& mapExtr)
+template <typename T> UUT fmap2Par(
+    const func<T(UUT)>& f,
+    const UUUUT& uuut)
 {
-    UUUUT duplicated = duplicate2(uut);
-    UUT res = fmap2Par(mapExtr, duplicated);
-    return res;
+    const func<UT(UUUT)> fmapper = [=](const UUUT& uuut2)
+    {
+        UT newUt;
+        newUt.position = uuut2.position;
+        newUt.field = fp::map(f, uuut2.field);
+        return newUt;
+    };
+
+    return { mapPar(fmapper, uuut.field), uuut.position };
 }
 
-template <typename T> UUT stepWithPar(
-    const func<T(UUT)>& mapExtr,
+template <typename T> UUT extend2Par(
+    const UUT& uut,
+    const func<T(UUT)>& f)
+{
+    UUUUT duplicated = duplicate2(uut);
+    return fmap2Par(f, duplicated);
+}
+
+template <typename T, typename B>
+UB extendPar(
+    const func<B(UT)>& f,
+    const UT& u)
+{
+    UUT duplicated = duplicate(u);
+    std::vector<B> mapped = mapPar(f, duplicated.field);
+    return { std::move(mapped), u.position };
+}
+
+template <typename T> UT stepWithPar(
+    const func<T(UT)>& f,
+    UT& ut)
+{
+    return extendPar(f, ut);
+}
+
+template <typename T> UUT stepWith2Par(
+    const func<T(UUT)>& f,
     UUT& uut)
 {
-    return extend2Par(uut, mapExtr);
+    return extend2Par(uut, f);
 }
 
 

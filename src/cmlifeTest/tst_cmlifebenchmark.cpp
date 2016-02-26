@@ -8,7 +8,6 @@
 #include "utils.h"
 #include "life.h"
 
-#include "parallel_life.h"
 #include "async_universe.h"
 #include "parallel_universe.h"
 
@@ -29,6 +28,7 @@ CMLifeBenchmarkTest::CMLifeBenchmarkTest()
 
 void CMLifeBenchmarkTest::stepLifeBenchmarkTest()
 {
+/*
     auto rule = lifeRule();
     LifeField l1 = fromVector2(gliderShifted1());
 
@@ -39,10 +39,12 @@ void CMLifeBenchmarkTest::stepLifeBenchmarkTest()
 
         QVERIFY(toVector2(l4) == gliderShifted4());
     }
+*/
 }
 
 void CMLifeBenchmarkTest::stepLifeAsyncBenchmarkTest()
 {
+/*
     auto rule = lifeRule();
     LifeField l1 = fromVector2(gliderShifted1());
     QBENCHMARK {
@@ -54,28 +56,29 @@ void CMLifeBenchmarkTest::stepLifeAsyncBenchmarkTest()
         LifeField l4 = f4.get();
         QVERIFY(toVector2(l4) == gliderShifted4());
     }
-}
-
-void CMLifeBenchmarkTest::stepLifeHugeParBenchmarkTest()
-{
-    auto rule = lifeRule();
-    LifeField l1 = fromVector2(gliderLifeHuge());
-    QBENCHMARK {
-        LifeField l2 = stepWithPar(rule, l1);
-        QVERIFY(l2.size() == HugeSize);
-    }
+*/
 }
 
 void CMLifeBenchmarkTest::stepLifeHugeBenchmarkTest()
 {
-/*
     auto rule = lifeRule();
     LifeField l1 = fromVector2(gliderLifeHuge());
 
     QBENCHMARK {
         LifeField l2 = stepWith(rule, l1);
-        LifeField l3 = stepWith(rule, l2);
-        LifeField l4 = stepWith(rule, l3);
+        QVERIFY(l2.size() == HugeSize);
+    }
+}
+
+void CMLifeBenchmarkTest::stepLifeHugeParBenchmarkTest()
+{
+/*
+ *     auto rule = lifeRule();
+    LifeField l1 = fromVector2(gliderLifeHuge());
+
+    QBENCHMARK {
+        LifeField l2 = stepWith2Par(rule, l1);
+        QVERIFY(l2.size() == HugeSize);
     }
     */
 }

@@ -13,12 +13,12 @@ namespace cmlife
 
 template <typename A, typename B>
 std::function<std::future<B>(A)> par(
-    const std::function<B(A)> mapper)
+    const std::function<B(A)>& f)
 {
-    return [=](const A a)
+    return [=](const A& a)
     {
         return std::async(std::launch::async,
-            [=]() { return mapper(a); }
+            [=]() { return f(a); }
         );
     };
 }
@@ -33,10 +33,8 @@ std::future<std::vector<B>> joinPars(
         std::vector<B> bs;
         bs.reserve(pars.size());
 
-        for (auto it = pars.begin(); it != pars.end(); ++it)
-        {
-            bs.push_back(it->get());
-        }
+        for (auto& it : pars)
+            bs.push_back(it.get());
 
         return bs;
     });
@@ -45,22 +43,22 @@ std::future<std::vector<B>> joinPars(
 /* A boosted version for the vector (uses reserve()). */
 template <typename A, typename B, template <class ...> class Container = std::vector>
 std::vector<B> mapPar(
-    const std::function<B(A)>& mapper,
+    const std::function<B(A)>& f,
     const std::vector<A>& va)
 {
     std::vector<std::future<B>> pars;
     pars.reserve(va.size());
-    std::transform(va.begin(), va.end(), std::back_inserter(pars), par(mapper));
+    std::transform(va.begin(), va.end(), std::back_inserter(pars), par(f));
     std::future<std::vector<B>> pRes = joinPars(pars);
     return pRes.get();
 }
 
 template <typename A, typename B, template <class ...> class Container>
 Container<B> mapPar(
-    const std::function<B(A)>& mapper,
+    const std::function<B(A)>& f,
     const Container<A>& va)
 {
-    Container<std::future<B>> pars = fp::map(par(mapper), va);
+    Container<std::future<B>> pars = fp::map(par(f), va);
     std::future<Container<B>> pRes = joinPars(pars);
     return pRes.get();
 }

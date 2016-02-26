@@ -17,11 +17,11 @@ HEADERS += \
     comonad.h \
     and_combinator.h \
     applicative.h \
-    parallel_life.h \
     parallel_universe.h \
     par.h \
     async_universe.h \
-    pregnancy_oscillator.h
+    pregnancy_oscillator.h \
+    presentation_snippets.h
 
 unix {
     target.path = /usr/lib

@@ -12,12 +12,14 @@ QMAKE_CXXFLAGS += -std=c++11
 
 
 SOURCES += \
-    ..\cmlife\life.cpp \ #this is a temporary hack
+    ..\cmlife\life.cpp \ #this is a temporary hack. It seems, we have bug.
+    ..\cmlife\pregnancy_oscillator.cpp \
     tst_cmlife.cpp \
     main.cpp \
     tst_cmlifebenchmark.cpp \
     test_data.cpp \
-    tst_pregnancy_oscillator.cpp
+    tst_pregnancy_oscillator.cpp \
+    tst_po_benchmark.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/cpp_functional_core/release/ -lcpp_functional_core
@@ -69,4 +71,5 @@ HEADERS += \
     tst_cmlife.h \
     tst_cmlifebenchmark.h \
     test_data.h \
-    tst_pregnancy_oscillator.h
+    tst_pregnancy_oscillator.h \
+    tst_po_benchmark.h

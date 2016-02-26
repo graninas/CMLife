@@ -7,7 +7,6 @@
 #include "universe.h"
 #include "utils.h"
 #include "life.h"
-#include "parallel_life.h"
 #include "async_universe.h"
 #include "parallel_universe.h"
 
@@ -96,14 +95,15 @@ void CMLifeTest::universe2ComonadTest()
 
 void CMLifeTest::fromVector2Test()
 {
-    U2 u = fromVector2(glider());
+    const auto gl = glider();
+    U2 u = fromVector2(gl);
 
     QVERIFY(u.field.size() == 3);
     for (int i = 0; i < u.size(); ++i)
     {
         QVERIFY(u.field[i].position == 0);
         QVERIFY(u.field[i].size() == 3);
-        QVERIFY(u.field[i].field == glider()[i]);
+        QVERIFY(u.field[i].field == gl[i]);
     }
 }
 
