@@ -23,41 +23,12 @@ HEADERS += \
     presentationsnippets.h \
     cmlifeview.h
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/cpp_functional_core/release/ -lcpp_functional_core
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/cpp_functional_core/debug/ -lcpp_functional_core
-else:unix: LIBS += -L$$OUT_PWD/../../lib/cpp_functional_core/ -lcpp_functional_core
+include($$PWD/../../lib/cpp_functional_core/cpp_functional_core.pri)
+include($$PWD/../../lib/cpp_monads/cpp_monads.pri)
+include($$PWD/../../lib/cpp_lenses/cpp_lenses.pri)
 
-INCLUDEPATH += $$PWD/../../lib/cpp_functional_core
-DEPENDPATH += $$PWD/../../lib/cpp_functional_core
+include($$PWD/../../src/cmlife/cmlife.pri)
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_functional_core/release/libcpp_functional_core.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_functional_core/debug/libcpp_functional_core.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_functional_core/release/cpp_functional_core.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_functional_core/debug/cpp_functional_core.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_functional_core/libcpp_functional_core.a
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/cpp_monads/cpp_monads/release/ -lcpp_monads
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/cpp_monads/cpp_monads/debug/ -lcpp_monads
-else:unix: LIBS += -L$$OUT_PWD/../../lib/cpp_monads/cpp_monads/ -lcpp_monads
 
-INCLUDEPATH += $$PWD/../../lib/cpp_monads/cpp_monads
-DEPENDPATH += $$PWD/../../lib/cpp_monads/cpp_monads
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_monads/cpp_monads/release/libcpp_monads.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_monads/cpp_monads/debug/libcpp_monads.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_monads/cpp_monads/release/cpp_monads.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_monads/cpp_monads/debug/cpp_monads.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../lib/cpp_monads/cpp_monads/libcpp_monads.a
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../src/cmlife/release/ -lcmlife
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../src/cmlife/debug/ -lcmlife
-else:unix: LIBS += -L$$OUT_PWD/../../src/cmlife/ -lcmlife
-
-INCLUDEPATH += $$PWD/../../src/cmlife
-DEPENDPATH += $$PWD/../../src/cmlife
-
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/release/libcmlife.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/debug/libcmlife.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/release/cmlife.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/debug/cmlife.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../src/cmlife/libcmlife.a

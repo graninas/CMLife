@@ -2,7 +2,7 @@
 #define GAME_OF_LIFE_H
 
 #include <algorithm>
-#include <universe.h>
+#include "universe.h"
 
 namespace cmlife {
 

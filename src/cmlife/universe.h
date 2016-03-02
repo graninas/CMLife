@@ -1,12 +1,12 @@
 #ifndef UNIVERSE_H
 #define UNIVERSE_H
 
+#include "map.h"
+
 #include <vector>
 #include <functional>
 #include <algorithm>
 #include <utility>
-
-#include <map.h>
 
 using namespace std;
 

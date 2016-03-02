@@ -1,6 +1,7 @@
 #include "game_of_life.h"
 
-namespace cmlife {
+namespace cmlife
+{
 
 std::vector<Cell> getNeighbours8(const LifeField& field)
 {
