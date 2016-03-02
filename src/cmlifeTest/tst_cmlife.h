@@ -13,7 +13,6 @@ public:
 private Q_SLOTS:
     void makeUniverseTest();
     void universeComonadTest();
-    void universe2ComonadTest();
 
     void fromVector2Test();
     void getNeighbours8_1Test();

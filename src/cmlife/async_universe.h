@@ -8,35 +8,42 @@
 namespace cmlife
 {
 
-#define FUUUUT std::future<UUUUT>
-#define FUUUT std::future<UUUT>
-#define FUUT std::future<UUT>
-#define FUT std::future<UT>
-#define FT std::future<T>
+#define FUUUUA std::future<UUUUA>
+#define FUUUA std::future<UUUA>
+#define FUUA std::future<UUA>
+#define FUA std::future<UA>
+#define FA std::future<A>
+#define FUUUUB std::future<UUUUB>
+#define FUUUB std::future<UUUB>
+#define FUUB std::future<UUB>
+#define FUB std::future<UB>
+#define FB std::future<B>
 
-template <typename T> FUUT extend2Async(
-    FUUT& fuut,
-    const func<T(UUT)>& mapExtr)
+template <typename A, typename B>
+FUUB extend2Async(
+    const func<B(UUA)>& f,
+    FUUA& fuu)
 {
-    return std::async(std::launch::async, [&]() // DANGER!!
+    return std::async(std::launch::async, [&]()
     {
-        fuut.wait();
-        auto uut = fuut.get();
-        return extend2(mapExtr, uut);
+        fuu.wait();
+        auto uu = fuu.get();
+        return extend(f, uu);
     });
 }
 
-template <typename T> FUUT stepWithAsync(
-    const func<T(UUT)>& mapExtr,
-    FUUT& fuut)
+template <typename A, typename B>
+FUUB stepWithAsync(
+    const func<B(UUA)>& f,
+    FUUA& fuu)
 {
-    return extend2Async(fuut, mapExtr);
+    return extend2Async(f, fuu);
 }
 
-template <typename T> FUUT
-   async(const UUT& uut)
+template <typename A>
+FUUA async(const UUA& uu)
 {
-    return std::async(std::launch::async, [=]() { return uut; });
+    return std::async(std::launch::async, [=]() { return uu; });
 }
 
 } // namespace cmlife

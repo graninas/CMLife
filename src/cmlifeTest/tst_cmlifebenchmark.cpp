@@ -3,10 +3,9 @@
 #include <QString>
 #include <QtTest>
 
-#include "comonad.h"
 #include "universe.h"
-#include "utils.h"
-#include "life.h"
+#include "universe_utils.h"
+#include "game_of_life.h"
 
 #include "async_universe.h"
 #include "parallel_universe.h"

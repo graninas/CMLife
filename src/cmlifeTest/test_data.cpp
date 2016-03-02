@@ -1,9 +1,8 @@
 #include "test_data.h"
 
-#include <comonad.h>
 #include <universe.h>
-#include <utils.h>
-#include <life.h>
+#include <universe_utils.h>
+#include <game_of_life.h>
 
 #include <vector>
 #include <string>

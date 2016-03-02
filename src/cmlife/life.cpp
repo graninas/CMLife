@@ -1,4 +1,4 @@
-#include "life.h"
+#include "game_of_life.h"
 
 namespace cmlife {
 

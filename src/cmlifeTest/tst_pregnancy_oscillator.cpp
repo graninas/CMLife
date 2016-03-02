@@ -4,9 +4,8 @@
 #include <QString>
 #include <QtTest>
 
-#include "comonad.h"
 #include "universe.h"
-#include "utils.h"
+#include "universe_utils.h"
 #include "pregnancy_oscillator.h"
 
 #include <vector>

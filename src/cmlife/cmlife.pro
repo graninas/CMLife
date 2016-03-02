@@ -12,16 +12,11 @@ SOURCES += \
 
 HEADERS += \
     universe.h \
-    utils.h \
-    life.h \
-    comonad.h \
-    and_combinator.h \
-    applicative.h \
     parallel_universe.h \
-    par.h \
     async_universe.h \
     pregnancy_oscillator.h \
-    presentation_snippets.h
+    universe_utils.h \
+    game_of_life.h
 
 unix {
     target.path = /usr/lib

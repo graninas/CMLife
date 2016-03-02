@@ -1,10 +1,8 @@
 #ifndef PREGNANCY_OSCILLATOR_H
 #define PREGNANCY_OSCILLATOR_H
 
-#include <functor.h>
-#include <universe.h>
-
 #include <algorithm>
+#include <universe.h>
 
 namespace cmlife {
 

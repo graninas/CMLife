@@ -1,10 +1,9 @@
 #ifndef TEST_DATA_H
 #define TEST_DATA_H
 
-#include <comonad.h>
 #include <universe.h>
-#include <utils.h>
-#include <life.h>
+#include <universe_utils.h>
+#include <game_of_life.h>
 
 #include <vector>
 #include <string>
@@ -19,11 +18,8 @@ std::vector<std::vector<cmlife::Cell>> glider();
 std::vector<std::vector<cmlife::Cell>> oscillator();
 
 std::vector<std::vector<cmlife::Cell>> gliderShifted1();
-
 std::vector<std::vector<cmlife::Cell>> gliderShifted2();
-
 std::vector<std::vector<cmlife::Cell>> gliderShifted3();
-
 std::vector<std::vector<cmlife::Cell>> gliderShifted4();
 
 cmlife::LifeField gliderLife();

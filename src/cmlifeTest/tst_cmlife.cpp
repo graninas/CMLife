@@ -3,10 +3,9 @@
 #include <QString>
 #include <QtTest>
 
-#include "comonad.h"
 #include "universe.h"
-#include "utils.h"
-#include "life.h"
+#include "universe_utils.h"
+#include "game_of_life.h"
 #include "async_universe.h"
 #include "parallel_universe.h"
 
@@ -70,27 +69,6 @@ void CMLifeTest::universeComonadTest()
     auto extended = extend(extractLife, u);
     QVERIFY(extended.field == u.field);
     QVERIFY(extended.position == u.position);
-}
-
-void CMLifeTest::universe2ComonadTest()
-{
-    U2 u1 = fromVector2(glider());
-
-    auto duplicated = duplicate(u1);
-    std::vector<U2> mapped;
-
-    auto rule = lifeRule();
-    for (int i = 0; i < duplicated.size(); ++i)
-    {
-        auto ux = extend(rule, duplicated.field[i]);
-        mapped.push_back(duplicate(ux));
-    }
-
-    const std::function<U(U2)> exF =
-        [](const U2& ux) { return extract(ux); };
-    U2 newU = {fp::map(exF, mapped), 0};
-
-    QVERIFY(duplicated.size() == 3);
 }
 
 void CMLifeTest::fromVector2Test()
@@ -185,14 +163,10 @@ void CMLifeTest::stepLifeAsyncTest()
     std::future<LifeField> f3 = stepWithAsync(rule, f2);
     std::future<LifeField> f4 = stepWithAsync(rule, f3);
 
-// Presentation tip: Can't get value from f1, f2, f3: deattached future.
-//    LifeField l1 = f1.get(); // Invalid
-
+    // Can't get value from f1, f2, f3: deattached future.
     LifeField l4 = f4.get();
     printField(l4);
 
     QVERIFY(toVector2(l4) == gliderShifted4());
 }
 
-//QTEST_APPLESS_MAIN(CMLifeTest)
-//#include "tst_cmlife.moc"

@@ -1,15 +1,13 @@
-#ifndef LIFE_H
-#define LIFE_H
+#ifndef GAME_OF_LIFE_H
+#define GAME_OF_LIFE_H
 
 #include <algorithm>
-#include <functor.h>
 #include <universe.h>
 
 namespace cmlife {
 
 typedef char Cell;
 
-// Tip: If we replace Cell to int, will be type mismatch (it's good).
 typedef Universe<Cell> U;
 typedef Universe<U> U2;
 
@@ -50,4 +48,4 @@ std::function<Cell(LifeField)> lifeRule();
 
 }
 
-#endif // LIFE_H
+#endif // GAME_OF_LIFE_H
