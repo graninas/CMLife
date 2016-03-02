@@ -22,11 +22,6 @@ template <class T> using UUUUT = Universe<Universe<Universe<Universe<T>>>>;
 // This leads to long UT<T>, but not short UT
 */
 
-#define UT Universe<T>
-#define UUT Universe<Universe<T>>
-#define UUUT Universe<Universe<Universe<T>>>
-#define UUUUT Universe<Universe<Universe<Universe<T>>>>
-
 #define UA Universe<A>
 #define UUA Universe<Universe<A>>
 #define UUUA Universe<Universe<Universe<A>>>
@@ -37,10 +32,10 @@ template <class T> using UUUUT = Universe<Universe<Universe<Universe<T>>>>;
 #define UUUUB Universe<Universe<Universe<Universe<B>>>>
 #define func function
 
-template <typename T>
+template <typename A>
 struct Universe
 {
-    std::vector<T> field;
+    std::vector<A> field;
     int position;
 
     int size() const
@@ -49,31 +44,31 @@ struct Universe
     }
 };
 
-template <typename T>
-UT left(const UT& u)
+template <typename A>
+UA left(const UA& u)
 {
-    UT newU { u.field, u.position - 1 };
+    UA newU { u.field, u.position - 1 };
     if (u.position == 0)
         newU.position = u.size() - 1;
     return newU;
 }
 
-template <typename T>
-UT right(const UT& u)
+template <typename A>
+UA right(const UA& u)
 {
-    UT newU { u.field, u.position + 1 };
+    UA newU { u.field, u.position + 1 };
     if (u.position == u.size() - 1)
         newU.position = 0;
     return newU;
 }
 
-template <typename T>
-std::vector<UT> tailOfGen(
+template <typename A>
+std::vector<UA> tailOfGen(
     int count,
-    const std::function<UT(UT)>& generator,
-    UT item)
+    const std::function<UA(UA)>& generator,
+    UA item)
 {
-    std::vector<UT> items;
+    std::vector<UA> items;
     items.reserve(count);
 
     auto it = generator(item);
@@ -85,16 +80,16 @@ std::vector<UT> tailOfGen(
     return items;
 }
 
-template <typename T>
-UUT makeUniverse(
-    const func<UT(UT)>& leftCreator,
-    const func<UT(UT)>& rightCreator,
-    const UT& u)
+template <typename A>
+UUA makeUniverse(
+    const func<UA(UA)>& leftCreator,
+    const func<UA(UA)>& rightCreator,
+    const UA& u)
 {
-    std::vector<UT> lefts  = tailOfGen(u.position, leftCreator, u);
-    std::vector<UT> rights = tailOfGen(u.size() - u.position - 1, rightCreator, u);
+    std::vector<UA> lefts  = tailOfGen(u.position, leftCreator, u);
+    std::vector<UA> rights = tailOfGen(u.size() - u.position - 1, rightCreator, u);
 
-    std::vector<UT> all;
+    std::vector<UA> all;
     all.reserve(u.size());
     all.insert(all.end(), lefts.begin(), lefts.end());
     all.push_back(u);
@@ -103,11 +98,11 @@ UUT makeUniverse(
     return { std::move(all), u.position };
 }
 
-template <typename T>
-UUT makeUniverseLR(const UT& u)
+template <typename A>
+UUA makeUniverseLR(const UA& u)
 {
-    const std::function<UT(UT)> leftCr = [](const UT& u1) {return left(u1); };
-    const std::function<UT(UT)> rightCr = [](const UT& u1) {return right(u1); };
+    const std::function<UA(UA)> leftCr = [](const UA& u1) {return left(u1); };
+    const std::function<UA(UA)> rightCr = [](const UA& u1) {return right(u1); };
 
     return makeUniverse(leftCr, rightCr, u);
 }
@@ -140,22 +135,22 @@ UUB fmap(
 
 // Applicative implementation
 
-template <typename T>
-UT pure(const T& t)
+template <typename A>
+UA pure(const A& t)
 {
     return {{t}, 0};
 }
 
 // Comonad implementation
 
-template <typename T>
-T extract(const UT& u)
+template <typename A>
+A extract(const UA& u)
 {
     return u.field[u.position];
 }
 
-template <typename T>
-UUT duplicate(const UT& u)
+template <typename A>
+UUA duplicate(const UA& u)
 {
     return makeUniverseLR(u);
 }

@@ -26,36 +26,36 @@ UUA fmap2Par(
     return { fp::mapPar(f2, uuu.field), uuu.position };
 }
 
-template <typename T> UUT extend2Par(
-    const UUT& uut,
-    const func<T(UUT)>& f)
+template <typename A> UUA extend2Par(
+    const UUA& uu,
+    const func<A(UUA)>& f)
 {
-    UUUUT duplicated = duplicate2(uut);
+    auto duplicated = duplicate2(uu);
     return fmap2Par(f, duplicated);
 }
 
-template <typename T, typename B>
+template <typename A, typename B>
 UB extendPar(
-    const func<B(UT)>& f,
-    const UT& u)
+    const func<B(UA)>& f,
+    const UA& u)
 {
-    UUT duplicated = duplicate(u);
+    UUA duplicated = duplicate(u);
     std::vector<B> mapped = fp::mapPar(f, duplicated.field);
     return { std::move(mapped), u.position };
 }
 
-template <typename T> UT stepWithPar(
-    const func<T(UT)>& f,
-    UT& ut)
+template <typename A> UA stepWithPar(
+    const func<A(UA)>& f,
+    UA& u)
 {
-    return extendPar(f, ut);
+    return extendPar(f, u);
 }
 
-template <typename T> UUT stepWith2Par(
-    const func<T(UUT)>& f,
-    UUT& uut)
+template <typename A> UUA stepWith2Par(
+    const func<A(UUA)>& f,
+    UUA& uu)
 {
-    return extend2Par(uut, f);
+    return extend2Par(uu, f);
 }
 
 } // namespace cmlife
