@@ -2,3 +2,5 @@ lib/*
 .git
 .build
 *.user
+
+CMLife\.pro\.user\.3\.2-pre1
